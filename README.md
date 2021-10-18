@@ -1,6 +1,16 @@
 # SuperGlue_NCNN
 
+iam appreaciate that anyone point out my redundant code error. :)
+
+<p align="center">
+  <img src="1.jpg" width="500">
+</p>
+
 ===
+## BibTeX Citation
+If you use any ideas from the paper or code from this repo, please consider citing:
+
+```txt
 @inproceedings{sarlin20superglue,
   author    = {Paul-Edouard Sarlin and
                Daniel DeTone and
@@ -11,3 +21,4 @@
   year      = {2020},
   url       = {https://arxiv.org/abs/1911.11763}
 }
+```
