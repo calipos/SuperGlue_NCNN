@@ -121,7 +121,6 @@ void* getSuperGlueNet(const std::string& weightPath)
 			pd.set(6, outputNum * inputNum);
 			pd.set(9, eachLayerReluFlag[i]);
 			attentionNets[layerId]->load_param(pd);
-			attentionNets[layerId]->create_pipeline(opt);
 			superglueAttentionWeights[weightId].create(outputNum * inputNum);
 			superglueAttentionWeights[weightId + 1].create(outputNum);
 			memcpy(superglueAttentionWeights[weightId].data, &(values[weightPos]), sizeof(float) * outputNum * inputNum);
@@ -129,6 +128,7 @@ void* getSuperGlueNet(const std::string& weightPath)
 			memcpy(superglueAttentionWeights[weightId + 1].data, &(values[weightPos]), sizeof(float) * outputNum);
 			weightPos += outputNum;
 			attentionNets[layerId]->load_model(ncnn::ModelBinFromMatArray(&(superglueAttentionWeights[weightId])));
+			attentionNets[layerId]->create_pipeline(opt);
 		}		
 	}
 	{ 
@@ -143,7 +143,6 @@ void* getSuperGlueNet(const std::string& weightPath)
 		pd.set(6, outputNum * inputNum);
 		pd.set(9, 0);
 		attentionNets[layerId]->load_param(pd);
-		attentionNets[layerId]->create_pipeline(opt);
 		superglueAttentionWeights[weightId].create(outputNum * inputNum);
 		superglueAttentionWeights[weightId + 1].create(outputNum);
 		memcpy(superglueAttentionWeights[weightId].data, &(values[weightPos]), sizeof(float) * outputNum * inputNum);
@@ -151,6 +150,7 @@ void* getSuperGlueNet(const std::string& weightPath)
 		memcpy(superglueAttentionWeights[weightId + 1].data, &(values[weightPos]), sizeof(float) * outputNum);
 		weightPos += outputNum;
 		attentionNets[layerId]->load_model(ncnn::ModelBinFromMatArray(&(superglueAttentionWeights[weightId])));
+		attentionNets[layerId]->create_pipeline(opt);
 	}
 	std::vector<int>outputs = { 32, 64, 128, 256, 256 }; 
 	for (int i = 0; i < 5; i++)
@@ -172,7 +172,6 @@ void* getSuperGlueNet(const std::string& weightPath)
 		if (i != 4)pd.set(9, 1);
 		else pd.set(9, 0);
 		attentionNets[layerId]->load_param(pd);
-		attentionNets[layerId]->create_pipeline(opt);
 		superglueAttentionWeights[weightId].create(outputNum * inputNum);
 		superglueAttentionWeights[weightId + 1].create(outputNum);
 		memcpy(superglueAttentionWeights[weightId].data, &(values[weightPos]), sizeof(float) * outputNum * inputNum);
@@ -180,6 +179,7 @@ void* getSuperGlueNet(const std::string& weightPath)
 		memcpy(superglueAttentionWeights[weightId + 1].data, &(values[weightPos]), sizeof(float) * outputNum);
 		weightPos += outputNum;
 		attentionNets[layerId]->load_model(ncnn::ModelBinFromMatArray(&(superglueAttentionWeights[weightId])));
+		attentionNets[layerId]->create_pipeline(opt);
 	}
 
 	{
@@ -373,6 +373,7 @@ cv::Mat superGlue(void* net, const int& imgHeight, const int& imgWidth,
 	CHECK((void*)attentionNets[0] == net);
 	ncnn::Option opt;
 	opt.num_threads = NUM_THREAD;
+    opt.use_packing_layout = false;
 	cv::Mat kp0Encode, kp1Encode;
 	{
 		ncnn::Mat input(kps0.rows, 3);
